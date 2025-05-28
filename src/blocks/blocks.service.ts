@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
+import { StartPageData } from '../types/block-data.types';
 
 @Injectable()
 export class BlocksService {
   constructor(private readonly prisma: PrismaService) {}
 
-  getStartPage(): any {
-    return this.prisma.blocks.findFirst({
+  async getStartPage(): Promise<StartPageData> {
+    const result = await this.prisma.blocks.findFirst({
       where: {
         block_type: 'start_page',
       },
@@ -14,5 +15,7 @@ export class BlocksService {
         data: true,
       },
     });
+
+    return (result?.data as StartPageData) || null;
   }
 }
