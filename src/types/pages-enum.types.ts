@@ -1,4 +1,5 @@
 export enum PagesEnum {
-  StartPage = 'start_page',
-  BeyondCodePage = 'beyond_code_page',
+  START_PAGE = 'start_page',
+  BEYOND_CODE_PAGE = 'beyond_code_page',
+  PROJECTS_PAGE = 'projects',
 }
