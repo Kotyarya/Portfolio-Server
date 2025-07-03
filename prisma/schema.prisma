@@ -9,7 +9,49 @@ datasource db {
 }
 
 model blocks {
-  id         Int     @id @default(autoincrement())
-  block_type String?
+  id         Int    @id @default(autoincrement())
+  block_type String
   data       Json?
+}
+
+model projects {
+  id         Int     @id @default(autoincrement())
+  name       String
+  img        String
+  video      String?
+  text       String
+  importance Int
+
+  statusId Int
+  status   projects_status @relation(fields: [statusId], references: [id], map: "projects_status_fkey")
+
+  link       String?
+  githubLink String
+
+  categoryId Int
+  category   projects_category @relation(fields: [categoryId], references: [id], map: "projects_category_fkey")
+
+  skills skills[]
+}
+
+model projects_status {
+  id       Int        @id @default(autoincrement())
+  name     String
+  img      String?
+  projects projects[]
+}
+
+model projects_category {
+  id       Int        @id @default(autoincrement())
+  name     String
+  projects projects[]
+}
+
+model skills {
+  id         Int        @id @default(autoincrement())
+  name       String
+  img        String
+  text       String
+  importance Int
+  projects   projects[]
 }
