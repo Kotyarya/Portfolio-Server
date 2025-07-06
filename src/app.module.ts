@@ -5,6 +5,7 @@ import { ProjectsModule } from './projects/projects.module';
 import { SkillsModule } from './skills/skills.module';
 import { ConfigModule } from '@nestjs/config';
 import { ApiKeyGuard } from './common/api-key.guard';
+import { ContactModule } from './contact/contact.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ApiKeyGuard } from './common/api-key.guard';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ContactModule,
   ],
   controllers: [],
   providers: [
