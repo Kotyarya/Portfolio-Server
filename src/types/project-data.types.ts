@@ -2,7 +2,7 @@ export type ProjectDataType = {
   id: number;
   name: string;
   githubLink: string;
-  link: string;
+  link: string | null;
   text: string;
   importance: number;
   img: string;
