@@ -1,8 +1,3 @@
-export type StartPageData = {
-  title: string;
-  text: string;
-};
-
 type BlockDataType = {
   title: string;
   subtitle: string;

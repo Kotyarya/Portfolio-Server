@@ -37,7 +37,7 @@ model projects {
 model projects_status {
   id       Int        @id @default(autoincrement())
   name     String
-  img      String?
+  img      String
   projects projects[]
 }
 

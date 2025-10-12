@@ -1,26 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { SkillsDataType } from '../types/skills-data.types';
+import { buildSuccessResponse } from '../common/buildSuccessResponse';
 
 @Injectable()
 export class SkillsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getAllSkills(): Promise<SkillsDataType[]> {
+  async getAllSkills(): Promise<{
+    status: number;
+    message: string;
+    data: SkillsDataType[];
+  }> {
     const result = await this.prisma.skills.findMany({
       orderBy: {
         importance: 'desc',
       },
     });
 
-    return (result as SkillsDataType[]) || null;
+    return buildSuccessResponse(result);
   }
 
-  async getSkillById(id: number): Promise<SkillsDataType | null> {
+  async getSkillById(
+    id: number,
+  ): Promise<{ status: number; message: string; data: SkillsDataType }> {
     const result = await this.prisma.skills.findUnique({
       where: { id },
     });
 
-    return (result as SkillsDataType) || null;
+    if (!result) {
+      throw new NotFoundException(`Skills with id ${id} not found`);
+    }
+
+    return buildSuccessResponse(result);
   }
 }

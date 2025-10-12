@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { ProjectDataType } from '../types/project-data.types';
+import { buildSuccessResponse } from '../common/buildSuccessResponse';
 
 @Injectable()
 export class ProjectsService {
@@ -11,7 +12,7 @@ export class ProjectsService {
     status?: string,
     skills?: string[],
     search?: string,
-  ): Promise<ProjectDataType[]> {
+  ): Promise<{ status: number; message: string; data: ProjectDataType[] }> {
     const result = await this.prisma.projects.findMany({
       select: {
         id: true,
@@ -70,10 +71,12 @@ export class ProjectsService {
         importance: 'desc',
       },
     });
-    return (result as ProjectDataType[]) || null;
+    return buildSuccessResponse(result);
   }
 
-  async getProjectById(id: number): Promise<ProjectDataType> {
+  async getProjectById(
+    id: number,
+  ): Promise<{ status: number; message: string; data: ProjectDataType }> {
     const result = await this.prisma.projects.findUnique({
       where: { id },
       select: {
@@ -106,6 +109,9 @@ export class ProjectsService {
         },
       },
     });
-    return (result as ProjectDataType) || null;
+    if (!result) {
+      throw new NotFoundException(`Project with id ${id} not found`);
+    }
+    return buildSuccessResponse(result);
   }
 }

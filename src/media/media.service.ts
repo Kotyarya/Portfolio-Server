@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { join } from 'path';
 import { createReadStream, existsSync } from 'fs';
 import { Writable } from 'stream';
@@ -12,8 +12,7 @@ export class MediaService {
     const path = join(this.mediaPath, fileName);
 
     if (!existsSync(path)) {
-      res.status(404).send('File not found');
-      return;
+      throw new NotFoundException('File not found');
     }
 
     const stream = createReadStream(path);
