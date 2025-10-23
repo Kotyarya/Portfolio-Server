@@ -12,6 +12,6 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter());
   app.use('/static_media', express.static(join(__dirname, '..', 'media')));
 
-  await app.listen(process.env.PORT ?? 4000);
+  await app.listen(process.env.PORT ?? 5000);
 }
 bootstrap();
