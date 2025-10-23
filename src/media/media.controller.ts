@@ -2,7 +2,9 @@ import { Controller, Get, Param, Res } from '@nestjs/common';
 import { MediaService } from './media.service';
 import { Writable } from 'stream';
 import { Response } from 'express';
+import { Public } from 'src/common/public.decorator';
 
+@Public()
 @Controller('media')
 export class MediaController {
   constructor(private readonly mediaService: MediaService) {}
