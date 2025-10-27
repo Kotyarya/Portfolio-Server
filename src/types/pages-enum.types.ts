@@ -1,5 +1,6 @@
 export enum PagesEnum {
-  HERO_BLOCK = 'hero',
-  ABOUT_ME_BLOCK = 'about_me',
-  PROJECTS_PAGE = 'projects',
+    HERO_BLOCK = 'hero',
+    ABOUT_ME_BLOCK = 'about_me',
+    SKILLS_PREVIEW_BLOCK = 'skills_preview',
+    PROJECTS_PAGE = 'projects',
 }
