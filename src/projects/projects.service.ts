@@ -14,6 +14,9 @@ export class ProjectsService {
         skills?: string[],
         search?: string,
     ): Promise<{ status: number; message: string; data: ProjectDataType[] }> {
+
+        console.log(skills)
+
         const result = await this.prisma.projects.findMany({
             select: {
                 id: true,
@@ -21,8 +24,11 @@ export class ProjectsService {
                 githubLink: true,
                 link: true,
                 text: true,
+                preview: true,
                 importance: true,
-                img: true,
+                img: {
+                    select: {img: true},
+                },
                 skills: {
                     select: {
                         name: true,
@@ -73,7 +79,13 @@ export class ProjectsService {
             },
         });
 
-        return buildSuccessResponse(result);
+        const formatted = result.map(project => ({
+            ...project,
+            img: project.img.map(i => i.img),
+            images: undefined, // убираем старое поле
+        }));
+
+        return buildSuccessResponse(formatted);
     }
 
     async getProjectById(
@@ -87,8 +99,11 @@ export class ProjectsService {
                 githubLink: true,
                 link: true,
                 text: true,
+                preview: true,
                 importance: true,
-                img: true,
+                img: {
+                    select: {img: true},
+                },
                 skills: {
                     select: {
                         name: true,
@@ -114,7 +129,14 @@ export class ProjectsService {
         if (!result) {
             throw new NotFoundException(`Project with id ${id} not found`);
         }
-        return buildSuccessResponse(result);
+
+        const formatted = {
+            ...result,
+            img: result.img.map(i => i.img),
+            images: undefined,
+        };
+
+        return buildSuccessResponse(formatted);
     }
 
     async getProjectSkills(): Promise<{
