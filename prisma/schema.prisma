@@ -15,23 +15,29 @@ model blocks {
 }
 
 model projects {
-  id         Int     @id @default(autoincrement())
+  id         Int               @id @default(autoincrement())
   name       String
-  img        String
   video      String?
   text       String
   importance Int
-
-  statusId Int
-  status   projects_status @relation(fields: [statusId], references: [id], map: "projects_status_fkey")
-
+  statusId   Int
   link       String?
   githubLink String
-
   categoryId Int
+  preview    String
   category   projects_category @relation(fields: [categoryId], references: [id], map: "projects_category_fkey")
+  status     projects_status   @relation(fields: [statusId], references: [id], map: "projects_status_fkey")
+  img        projects_images[]
+  skills     skills[]          @relation("projectsToskills")
+}
 
-  skills skills[]
+model projects_images {
+  id        Int      @id @default(autoincrement())
+  img       String
+  projectId Int
+  project   projects @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "projects_images_projectId_fkey")
+
+  @@index([projectId])
 }
 
 model projects_status {
@@ -53,7 +59,7 @@ model skills {
   img        String
   text       String
   importance Int
-  projects   projects[]
+  projects   projects[] @relation("projectsToskills")
 }
 
 model contacts {
