@@ -11,8 +11,8 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe());
     app.useGlobalFilters(new AllExceptionsFilter());
     app.use('/static_media', express.static(join(__dirname, '..', 'media')));
-
-    await app.listen(process.env.PORT ?? 5000, "0.0.0.0");
+    const port = Number(process.env.PORT) || 3000;
+    await app.listen(port, "0.0.0.0");
 }
 
 bootstrap();
