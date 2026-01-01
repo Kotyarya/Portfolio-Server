@@ -1,6 +1,6 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {PrismaService} from '../prisma.service';
-import {ProjectDataType} from '../types/project-data.types';
+import {ProjectDataType, SkillDTO} from '../types/project-data.types';
 import {buildSuccessResponse} from '../common/buildSuccessResponse';
 
 @Injectable()
@@ -139,30 +139,27 @@ export class ProjectsService {
         return buildSuccessResponse(formatted);
     }
 
+
     async getProjectSkills(): Promise<{
         status: number;
         message: string;
-        data: { name: string; importance: number }[]
+        data: SkillDTO[];
     }> {
         const result = await this.prisma.projects.findMany({
             select: {
                 skills: {
-                    select: {
-                        name: true,
-                        importance: true,
-                    }
-                }
+                    select: {name: true, importance: true},
+                },
             },
         });
 
-        const allSkills = result.flatMap(project => project.skills);
+        const allSkills: SkillDTO[] = result.flatMap((project) => project.skills);
 
-        const uniqueSkills = Array.from(
-            new Map(allSkills.map(skill => [skill.name, skill])).values()
+        const uniqueSkills: SkillDTO[] = Array.from(
+            new Map(allSkills.map((skill) => [skill.name, skill])).values()
         );
 
         uniqueSkills.sort((a, b) => b.importance - a.importance);
-
 
         return buildSuccessResponse(uniqueSkills);
     }
