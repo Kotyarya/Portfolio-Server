@@ -19,3 +19,6 @@ export type ProjectDataType = {
         img: string;
     };
 };
+
+
+export type SkillDTO = { name: string; importance: number };
