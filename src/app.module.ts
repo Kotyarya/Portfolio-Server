@@ -6,6 +6,7 @@ import { SkillsModule } from './skills/skills.module';
 import { ConfigModule } from '@nestjs/config';
 import { ApiKeyGuard } from './common/api-key.guard';
 import { ContactModule } from './contact/contact.module';
+import { validateEnvironment } from './config/env.validation';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ContactModule } from './contact/contact.module';
     SkillsModule,
     ConfigModule.forRoot({
       isGlobal: true,
+      validate: validateEnvironment,
     }),
     ContactModule,
   ],
