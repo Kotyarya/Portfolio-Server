@@ -17,11 +17,6 @@ export class ApiKeyGuard implements CanActivate {
   ) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest<Request>();
-    const apiKey = request.headers['x-api-key'];
-
-    const validKey = this.configService.get<string>('API_KEY');
-
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -29,7 +24,16 @@ export class ApiKeyGuard implements CanActivate {
 
     if (isPublic) return true;
 
-    if (apiKey !== validKey) {
+    const request = context.switchToHttp().getRequest<Request>();
+    const apiKey = request.headers['x-api-key'];
+    const validKey = this.configService.get<string>('API_KEY');
+
+    if (
+      typeof validKey !== 'string' ||
+      validKey.trim().length === 0 ||
+      typeof apiKey !== 'string' ||
+      apiKey !== validKey
+    ) {
       throw new UnauthorizedException('Invalid API key');
     }
 
