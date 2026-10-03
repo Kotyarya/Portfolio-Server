@@ -35,6 +35,7 @@ The API binds to `0.0.0.0` and uses Render's `PORT`. Environment validation fail
 | `GET /projects/categories` | Project category filters |
 | `GET /skills`, `GET /skills/:id` | Skills and skill details |
 | `GET /blocks/:page` | Structured page content blocks |
+| `GET /home` | Aggregated homepage payload for one frontend request |
 | `GET /media/:filename` | Allowlisted media files with path traversal protection |
 | `POST /contact` | Validated, rate-limited email delivery |
 | `GET /health` | Public readiness response used by Render health checks |
