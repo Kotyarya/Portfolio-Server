@@ -8,6 +8,7 @@ import { ApiKeyGuard } from './common/api-key.guard';
 import { ContactModule } from './contact/contact.module';
 import { validateEnvironment } from './config/env.validation';
 import {HealthModule} from './health/health.module';
+import {HomeModule} from './home/home.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import {HealthModule} from './health/health.module';
     }),
     ContactModule,
     HealthModule,
+    HomeModule,
   ],
   controllers: [],
   providers: [

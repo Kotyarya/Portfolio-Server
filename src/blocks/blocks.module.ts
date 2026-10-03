@@ -6,5 +6,6 @@ import { PrismaService } from '../prisma.service';
 @Module({
   controllers: [BlocksController],
   providers: [BlocksService, PrismaService],
+  exports: [BlocksService],
 })
 export class BlocksModule {}
