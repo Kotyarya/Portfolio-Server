@@ -1,18 +1,22 @@
 import {NestFactory} from '@nestjs/core';
+import {NestExpressApplication} from '@nestjs/platform-express';
 import {AppModule} from './app.module';
 import {join} from 'path';
 import * as express from 'express';
 import {AllExceptionsFilter} from './common/AllExceptionsFilter.filter';
-import {ValidationPipe} from '@nestjs/common';
+import {createValidationPipe} from './common/validation.pipe';
+import {securityHeaders} from './common/security-headers.middleware';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-    app.useGlobalPipes(new ValidationPipe());
+    app.set('trust proxy', 1);
+    app.use(securityHeaders);
+    app.useGlobalPipes(createValidationPipe());
     app.useGlobalFilters(new AllExceptionsFilter());
     app.use('/static_media', express.static(join(__dirname, '..', 'media')));
     const port = Number(process.env.PORT) || 3000;
     await app.listen(port, "0.0.0.0");
 }
 
-bootstrap();
+void bootstrap();
