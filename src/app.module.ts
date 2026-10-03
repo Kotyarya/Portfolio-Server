@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ApiKeyGuard } from './common/api-key.guard';
 import { ContactModule } from './contact/contact.module';
 import { validateEnvironment } from './config/env.validation';
+import {HealthModule} from './health/health.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { validateEnvironment } from './config/env.validation';
       validate: validateEnvironment,
     }),
     ContactModule,
+    HealthModule,
   ],
   controllers: [],
   providers: [

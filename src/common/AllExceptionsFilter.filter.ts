@@ -4,11 +4,14 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
+  private readonly logger = new Logger(AllExceptionsFilter.name);
+
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
@@ -44,18 +47,26 @@ export class AllExceptionsFilter implements ExceptionFilter {
       errorMessage = 'Unexpected error';
     }
 
-    console.error(
-      `[${new Date().toISOString()}] ❌ ${status} ${req.method} ${req.url}`,
-    );
-    console.error('Message:', errorMessage);
+    const context = {
+      event: 'request_failed',
+      status,
+      method: req.method,
+      path: req.url,
+      message: errorMessage,
+    };
+
     if (!(exception instanceof HttpException)) {
       if (
         typeof exception === 'object' &&
         exception !== null &&
         'stack' in exception
       ) {
-        console.error('Stack:', (exception as { stack?: unknown }).stack);
+        this.logger.error(context, (exception as { stack?: string }).stack);
+      } else {
+        this.logger.error(context);
       }
+    } else {
+      this.logger.warn(context);
     }
 
     res.status(status).json({

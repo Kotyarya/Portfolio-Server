@@ -15,8 +15,6 @@ export class ProjectsService {
         search?: string,
     ): Promise<{ status: number; message: string; data: ProjectDataType[] }> {
 
-        console.log(skills)
-
         const result = await this.prisma.projects.findMany({
             select: {
                 id: true,

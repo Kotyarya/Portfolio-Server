@@ -37,6 +37,7 @@ The API binds to `0.0.0.0` and uses Render's `PORT`. Environment validation fail
 | `GET /blocks/:page` | Structured page content blocks |
 | `GET /media/:filename` | Allowlisted media files with path traversal protection |
 | `POST /contact` | Validated, rate-limited email delivery |
+| `GET /health` | Public readiness response used by Render health checks |
 
 All application routes require `x-api-key` unless explicitly marked public.
 
@@ -92,4 +93,4 @@ The automated suite covers the API key guard, DTO limits, rate limiting, media p
 
 ## Render deployment
 
-The `main` branch auto-deploys to the Render web service. Render installs dependencies, generates Prisma Client through `postinstall`, builds the NestJS app and starts `dist/main`. Production secrets are managed in the Render workspace and are not stored in GitHub.
+The `main` branch auto-deploys to the Render web service. The service uses `npm ci && npm run build`, starts `dist/main`, and probes `/health` before moving traffic to a new instance. Production secrets are managed in the Render workspace and are not stored in GitHub.
