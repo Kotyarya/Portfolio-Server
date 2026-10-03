@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import { TransportOptions } from 'nodemailer';
-import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class ContactService {
@@ -10,7 +9,6 @@ export class ContactService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly prismaService: PrismaService,
   ) {
     this.transporter = nodemailer.createTransport({
       host: 'smtp.mail.me.com',
@@ -28,20 +26,18 @@ export class ContactService {
     email: string,
     message: string,
   ): Promise<void> {
-    await this.transporter.sendMail({
-      from: `Portfolio Website <${this.configService.get('MAILER_USER')}>`,
-      to: this.configService.get<string>('MAILER_USER'),
-      subject: `Новое сообщение от ${name}`,
-      text: `Имя: ${name}\nПочта: ${email}\n\nСообщение:\n${message}`,
-    });
-
-    await this.prismaService.contacts.create({
-      data: {
-        name,
-        email,
-        message,
-      },
-    });
+    try {
+      await this.transporter.sendMail({
+        from: `Portfolio Website <${this.configService.get('MAILER_USER')}>`,
+        to: this.configService.get<string>('MAILER_USER'),
+        subject: `Новое сообщение от ${name}`,
+        text: `Имя: ${name}\nПочта: ${email}\n\nСообщение:\n${message}`,
+      });
+    } catch {
+      throw new ServiceUnavailableException(
+        'Contact message could not be delivered',
+      );
+    }
   }
 
   async sendConfirmationToUser(
