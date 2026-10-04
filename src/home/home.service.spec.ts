@@ -22,11 +22,12 @@ describe('HomeService', () => {
 
     expect(response.status).toBe(200);
     expect(response.data).toMatchObject({
+      hero: {title: PagesEnum.HERO_BLOCK},
       projects: [{id: 1}],
       skills: [{id: 2}],
       aboutMe: {title: PagesEnum.ABOUT_ME_BLOCK},
       contactMe: {title: PagesEnum.CONTACT_ME_BLOCK},
     });
-    expect(blocksService.getBlockData).toHaveBeenCalledTimes(4);
+    expect(blocksService.getBlockData).toHaveBeenCalledTimes(5);
   });
 });

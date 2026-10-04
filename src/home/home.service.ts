@@ -14,7 +14,8 @@ export class HomeService {
   ) {}
 
   async getHome() {
-    const [contactMe, projects, projectsPreview, skillsPreview, skills, aboutMe] = await Promise.all([
+    const [hero, contactMe, projects, projectsPreview, skillsPreview, skills, aboutMe] = await Promise.all([
+      this.blocksService.getBlockData(PagesEnum.HERO_BLOCK),
       this.blocksService.getBlockData(PagesEnum.CONTACT_ME_BLOCK),
       this.projectsService.getAllProjects(),
       this.blocksService.getBlockData(PagesEnum.PROJECTS_PREVIEW_BLOCK),
@@ -24,6 +25,7 @@ export class HomeService {
     ]);
 
     return buildSuccessResponse({
+      hero: hero.data,
       aboutMe: aboutMe.data,
       skills: skills.data,
       skillsPreview: skillsPreview.data,
